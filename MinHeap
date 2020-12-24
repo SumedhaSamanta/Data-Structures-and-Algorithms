@@ -30,7 +30,7 @@ class Heap:
         lc = (2*p) + 1
         rc = (2*p) + 2
         while((lc<lenHeap and self.heap[p]>self.heap[lc]) or (rc<lenHeap and self.heap[p]>self.heap[rc])):#bubble-down
-            if self.heap[lc]<self.heap[rc]:
+            if rc>=lenHeap or self.heap[lc]<self.heap[rc]:
                 self.heap[lc],self.heap[p] = self.heap[p],self.heap[lc]
                 p = lc
             else:
