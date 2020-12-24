@@ -1,0 +1,107 @@
+import math
+class MinHeap:
+    heap = []
+    def __init__(self):
+        self.heap = []
+    def insert(self,k):#insert element k into the existing heap; maintain heap property
+        self.heap.append(k)
+        c = len(self.heap) - 1
+        p = math.ceil(c/2) - 1
+        while(p>=0 and c>0 and self.heap[p]>self.heap[c]):#bubble-up
+            self.heap[p],self.heap[c] = self.heap[c],self.heap[p]
+            c = p
+            p = math.ceil(c/2) - 1
+    def extractMin(self):
+        return self.deleteAtIndex(0)
+    def deleteAtIndex(self,k):#delete element at index k of the heap
+        self.heap[k],self.heap[-1]=self.heap[-1],self.heap[k]
+        item = self.heap.pop()
+        lenHeap = len(self.heap)
+        p = k
+        lc = (2*p) + 1
+        rc = (2*p) + 2
+        while((lc<lenHeap and self.heap[p]>self.heap[lc]) or (rc<lenHeap and self.heap[p]>self.heap[rc])):#bubble-down
+            if rc>=lenHeap or self.heap[lc]<self.heap[rc]:
+                self.heap[lc],self.heap[p] = self.heap[p],self.heap[lc]
+                p = lc
+            else:
+                self.heap[rc],self.heap[p] = self.heap[p],self.heap[rc]
+                p = rc
+            lc = (2*p) + 1
+            rc = (2*p) + 2
+        return item
+    def displayHeap(self):
+        print(self.heap)
+
+class MaxHeap:
+    heap = []
+    def __init__(self):
+        self.heap = []
+    def insert(self,k):#insert element k into the existing heap; maintain heap property
+        self.heap.append(k)
+        c = len(self.heap) - 1
+        p = math.ceil(c/2) - 1
+        while(p>=0 and c>0 and self.heap[p]<self.heap[c]):#bubble-up
+            self.heap[p],self.heap[c] = self.heap[c],self.heap[p]
+            c = p
+            p = math.ceil(c/2) - 1
+    def extractMax(self):
+        return self.deleteAtIndex(0)
+    def deleteAtIndex(self,k):#delete element at index k of the heap
+        self.heap[k],self.heap[-1]=self.heap[-1],self.heap[k]
+        item = self.heap.pop()
+        lenHeap = len(self.heap)
+        p = k
+        lc = (2*p) + 1
+        rc = (2*p) + 2
+        while((lc<lenHeap and self.heap[p]<self.heap[lc]) or (rc<lenHeap and self.heap[p]<self.heap[rc])):#bubble-down
+            if rc>=lenHeap or self.heap[lc]>self.heap[rc]:
+                self.heap[lc],self.heap[p] = self.heap[p],self.heap[lc]
+                p = lc
+            else:
+                self.heap[rc],self.heap[p] = self.heap[p],self.heap[rc]
+                p = rc
+            lc = (2*p) + 1
+            rc = (2*p) + 2
+        return item
+    def displayHeap(self):
+        print(self.heap)
+
+n = int(input())
+maxH = MaxHeap()
+minH = MinHeap()
+s = 0
+for i in range(n):
+    xi = int(input())
+    if i == 0:
+        maxH.insert(xi)
+    else:
+        maxOfMaxHeap = maxH.heap[0]
+        if xi < maxOfMaxHeap:
+            maxH.insert(xi)
+            if (len(maxH.heap) - len(minH.heap))==2:#making sure the number of elements are balanced in the two heaps
+                item = maxH.extractMax()
+                #print("item=",item)
+                minH.insert(item)
+        else:
+            minH.insert(xi)
+            if (len(minH.heap) - len(maxH.heap))==2:#making sure the number of elements are balanced in the two heaps
+                item = minH.extractMin()
+                #print("item=",item)
+                maxH.insert(item)
+    #print("maxH=")
+    #maxH.displayHeap()
+    #print("minH=")
+    #minH.displayHeap()
+    lenMaxH = len(maxH.heap)
+    lenMinH = len(minH.heap)
+    k = i + 1
+    if k%2==0:
+        k = k//2
+    else:
+        k = (k+1)//2
+    if k == lenMaxH:
+        s = s + maxH.heap[0]
+    else:
+        s = s + minH.heap[0]
+print(s)
