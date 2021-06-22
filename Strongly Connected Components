@@ -1,0 +1,47 @@
+# using Kosaraju’s algorithm
+
+def dfs(node,graph,visited):
+    stack = []
+    visited[node] = True
+    try:
+        for adj_node in graph[node]:
+            if not visited[adj_node]:
+                stack.extend(dfs(adj_node,graph,visited))
+    except:
+        pass
+    stack.append(node)
+    return stack
+    
+v = int(input("Enter number of vertices: "))
+e = int(input("Enter number of edges: "))
+
+g = {}
+visited_g = [False]*v
+
+g_rev = {}
+visited_g_rev = [False]*v
+
+for i in range(e):
+    u,v = map(int,input("Enter start vertex and end vertex separated by a space").split())
+    try:
+        g[u].append(v)
+    except:
+        g[u] = [v]
+    try:
+        g_rev[v].append(u)
+    except:
+        g_rev[v] = [u]
+            
+stack = []
+for i in range(v):
+    if not visited_g[i]:
+        stack.extend(dfs(i,g,visited_g))
+
+scc = []
+
+while(len(stack)>0):
+    node = stack.pop()
+    if not visited_g_rev[node]:
+        scc.append([])
+        scc[-1].extend(dfs(node,g_rev,visited_g_rev))
+print(scc)    
